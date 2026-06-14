@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
     resume: String,
     profilePicture: String
   },
+  resume: {
+  type: String,
+  default: "",
+},
   company: {
     companyName: String,
     website: String,

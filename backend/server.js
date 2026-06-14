@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const path = require("path");
 
 dotenv.config();
 connectDB();
@@ -19,11 +20,12 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/ai', require('./routes/ai'));
-
+app.use('/api/ai', require('./routes/ai'));
 // Test route
 app.get('/', (req, res) => {
   res.json({ message: 'AI Job Portal API is running!' });

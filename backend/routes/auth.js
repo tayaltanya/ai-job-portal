@@ -6,6 +6,28 @@ const User = require('../models/User');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/resumes");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "application/pdf") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PDF files are allowed"));
+    }
+  },
+});
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -169,5 +191,33 @@ router.delete('/users/:id', protect, adminOnly, async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 })
+// @route   POST /api/auth/upload-resume
+// @desc    Upload resume PDF
+router.post(
+  "/upload-resume",
+  protect,
+  upload.single("resume"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          message: "No resume uploaded",
+        });
+      }
+
+      // Optional: save resume path in user document
+      await User.findByIdAndUpdate(req.user._id, {
+        resume: req.file.path,
+      });
+
+      res.json({
+        message: "Resume uploaded successfully",
+        resume: req.file.path,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
 
 module.exports = router;

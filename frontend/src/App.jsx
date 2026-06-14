@@ -10,6 +10,8 @@ import AICoverLetter from './pages/AICoverLetter'
 import CompanyDashboard from './pages/CompanyDashboard'
 import JobDetail from './pages/JobDetail'
 import AdminPanel from './pages/AdminPanel'
+import SkillAssessment from './pages/SkillAssessment'
+
 
 
 
@@ -30,6 +32,7 @@ function App() {
           <Route path="/ai-cover-letter" element={<AICoverLetter />} />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/skill-assessment" element={<SkillAssessment />} />
         </Routes>
       </Router>
     </AuthProvider>

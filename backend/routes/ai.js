@@ -163,5 +163,46 @@ router.post('/generate-cover-letter', protect, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// @route   POST /api/ai/generate-quiz
+// @desc    Generate MCQ quiz using AI
+router.post('/generate-quiz', protect, async (req, res) => {
+  try {
+    const { topic, difficulty, numQuestions } = req.body;
 
+    if (!topic) {
+      return res.status(400).json({ message: 'Topic is required' });
+    }
+
+    const prompt = `
+    Generate ${numQuestions || 10} multiple choice questions on "${topic}" 
+    for a ${difficulty || 'intermediate'} level software developer interview.
+    
+    Respond ONLY in this exact JSON format, no extra text:
+    {
+      "quiz": [
+        {
+          "question": "Question text here?",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctAnswer": 0,
+          "explanation": "Why this answer is correct"
+        }
+      ]
+    }
+    
+    Rules:
+    - correctAnswer is index (0,1,2,3) of correct option
+    - Make questions practical and interview focused
+    - Mix easy, medium and hard questions
+    - Options should be realistic and tricky
+    `;
+
+    const text = await callGroq(prompt);
+    const result = parseJSON(text);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Quiz Error:', error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
 module.exports = router;

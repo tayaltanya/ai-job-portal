@@ -32,6 +32,7 @@ export const getJobApplications = (jobId) => API.get(`/applications/job/${jobId}
 export const updateApplicationStatus = (id, data) => API.put(`/applications/${id}`, data)
 
 // AI APIs
+
 export const analyzeResume = (data) => API.post('/ai/analyze-resume', data)
 export const suggestJobs = (data) => API.post('/ai/suggest-jobs', data)
 export const generateCoverLetter = (data) => API.post('/ai/generate-cover-letter', data)
