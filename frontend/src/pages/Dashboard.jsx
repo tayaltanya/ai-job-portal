@@ -113,6 +113,12 @@ function Dashboard() {
               <p style={styles.cardDesc}>Get AI feedback on your resume instantly</p>
               <button style={styles.cardBtn}>Analyze Now →</button>
             </div>
+            <div style={styles.card} onClick={() => navigate('/skill-assessment')}>
+              <div style={styles.cardIcon}>🎯</div>
+              <h3 style={styles.cardTitle}>Skill Assessment</h3>
+              <p style={styles.cardDesc}>Test your knowledge with AI quiz</p>
+              <button style={styles.cardBtn}>Start Now →</button>
+            </div>
 
             <div style={styles.card} onClick={() => setActiveTab('applications')}>
               <div style={styles.cardIcon}>📝</div>
@@ -201,6 +207,19 @@ function Dashboard() {
                   onClick={() => navigate('/ai-suggester')}
                 >
                   Try Now →
+                </button>
+              </div>
+              <div style={styles.aiCard}>
+                <div style={styles.cardIcon}>🎯</div>
+                <h3 style={styles.cardTitle}>Skill Assessment</h3>
+                <p style={styles.cardDesc}>
+                  Test your skills with AI generated MCQ quiz on any topic
+                </p>
+                <button
+                  style={styles.aiBtn}
+                  onClick={() => navigate('/skill-assessment')}
+                >
+                  Start Quiz →
                 </button>
               </div>
 
