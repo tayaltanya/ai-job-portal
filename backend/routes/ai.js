@@ -205,4 +205,61 @@ router.post('/generate-quiz', protect, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// @route   POST /api/ai/learning-path
+// @desc    Generate personalized learning path
+router.post('/learning-path', protect, async (req, res) => {
+  try {
+    const { targetRole, currentSkills, timeframe } = req.body;
+
+    if (!targetRole) {
+      return res.status(400).json({ message: 'Target role is required' });
+    }
+
+    const prompt = `
+    Create a detailed personalized learning path for someone who wants 
+    to become a "${targetRole}".
+    
+    Their current skills: ${currentSkills || 'Complete beginner'}
+    Available time: ${timeframe || '3 months'}
+    
+    Respond ONLY in this exact JSON format, no extra text:
+    {
+      "roadmap": {
+        "title": "Learning Path Title",
+        "totalWeeks": 12,
+        "overview": "Brief overview of the path",
+        "phases": [
+          {
+            "phase": 1,
+            "title": "Phase Title",
+            "duration": "2 weeks",
+            "skills": ["skill1", "skill2"],
+            "resources": [
+              {
+                "name": "Resource name",
+                "type": "YouTube/Course/Book/Website",
+                "url": "resource url or platform name",
+                "free": true
+              }
+            ],
+            "projects": ["Project idea 1", "Project idea 2"],
+            "goal": "What you will achieve in this phase"
+          }
+        ],
+        "interviewPrep": ["tip1", "tip2", "tip3"],
+        "expectedSalary": "salary range in INR",
+        "jobTitles": ["Job Title 1", "Job Title 2"]
+      }
+    }
+    `;
+
+    const text = await callGroq(prompt);
+    const result = parseJSON(text);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Learning Path Error:', error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
 module.exports = router;

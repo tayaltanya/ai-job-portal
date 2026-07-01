@@ -11,6 +11,7 @@ import CompanyDashboard from './pages/CompanyDashboard'
 import JobDetail from './pages/JobDetail'
 import AdminPanel from './pages/AdminPanel'
 import SkillAssessment from './pages/SkillAssessment'
+import LearningPath from './pages/LearningPath'
 
 
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/skill-assessment" element={<SkillAssessment />} />
+          <Route path="/learning-path" element={<LearningPath />} />
         </Routes>
       </Router>
     </AuthProvider>

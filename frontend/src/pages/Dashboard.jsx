@@ -222,6 +222,19 @@ function Dashboard() {
                   Start Quiz →
                 </button>
               </div>
+              <div style={styles.aiCard}>
+                <div style={styles.cardIcon}>🗺️</div>
+                <h3 style={styles.cardTitle}>Learning Path</h3>
+                <p style={styles.cardDesc}>
+                  Get AI personalized roadmap to land your dream job!
+                </p>
+                <button
+                  style={styles.aiBtn}
+                  onClick={() => navigate('/learning-path')}
+                >
+                  Generate Path →
+                </button>
+              </div>
 
               <div style={styles.aiCard}>
                 <div style={styles.cardIcon}>✉️</div>
