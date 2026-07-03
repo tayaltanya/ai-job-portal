@@ -19,6 +19,17 @@ router.post('/', protect, companyOnly, async (req, res) => {
       experience,
       company: req.user._id
     });
+    if (!req.user.isVerified) {
+      return res.status(403).json({
+        message: 'Your company is pending approval. Please wait for admin verification!'
+      })
+    }
+
+    const job = await Job.create({
+      ...req.body,
+      company: req.user._id
+    });
+
 
     res.status(201).json(job);
   } catch (error) {

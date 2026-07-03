@@ -205,6 +205,45 @@ function AdminPanel() {
             </div>
           </div>
         )}
+        // Add new tab
+        {activeTab === 'companies' && (
+          <div>
+            <h2 style={styles.sectionTitle}>
+              Pending Companies ⏳
+            </h2>
+            {pendingCompanies.length === 0 ? (
+              <p>No pending companies!</p>
+            ) : (
+              pendingCompanies.map(company => (
+                <div key={company._id} style={styles.companyCard}>
+                  <div>
+                    <h3>{company.name}</h3>
+                    <p>{company.email}</p>
+                    <p>{company.company?.companyName}</p>
+                  </div>
+                  <div style={styles.actionBtns}>
+                    <button
+                      style={styles.approveBtn}
+                      onClick={() => handleVerify(
+                        company._id, 'approved'
+                      )}
+                    >
+                      ✅ Approve
+                    </button>
+                    <button
+                      style={styles.rejectBtn}
+                      onClick={() => handleVerify(
+                        company._id, 'rejected'
+                      )}
+                    >
+                      ❌ Reject
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
         {/* Jobs Tab */}
         {activeTab === 'jobs' && (

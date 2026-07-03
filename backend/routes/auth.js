@@ -57,7 +57,10 @@ router.post('/register', async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || 'student'
+      role: role || 'student',
+      isVerified: role === 'student' ? true : false,
+      verificationStatus: role === 'student'
+        ? 'approved' : 'pending'
     });
 
     res.status(201).json({
@@ -219,5 +222,44 @@ router.post(
     }
   }
 );
+// @route   GET /api/auth/pending-companies
+// @desc    Get all pending companies
+router.get('/pending-companies',
+  protect, adminOnly, async (req, res) => {
+  try {
+    const companies = await User.find({
+      role: 'company',
+      verificationStatus: 'pending'
+    }).select('-password')
+    res.json(companies)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
 
+// @route   PUT /api/auth/verify-company/:id
+// @desc    Approve or reject company
+router.put('/verify-company/:id',
+  protect, adminOnly, async (req, res) => {
+  try {
+    const { status } = req.body
+    // status = 'approved' or 'rejected'
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        verificationStatus: status,
+        isVerified: status === 'approved'
+      },
+      { new: true }
+    )
+
+    res.json({
+      message: `Company ${status} successfully!`,
+      user
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
 module.exports = router;

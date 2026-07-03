@@ -116,7 +116,20 @@ function CompanyDashboard() {
   return (
     <div style={styles.container}>
       <Navbar />
+      {/* Show at top of company dashboard */}
+      {!user.isVerified && (
+        <div style={styles.pendingBanner}>
+          ⏳ Your company is pending admin approval!
+          You cannot post jobs until verified.
+        </div>
+      )}
 
+      {user.verificationStatus === 'rejected' && (
+        <div style={styles.rejectedBanner}>
+          ❌ Your company was rejected!
+          Please contact admin.
+        </div>
+      )}
       {/* Header */}
       <div style={styles.header}>
         <div style={styles.headerContent}>
@@ -145,6 +158,7 @@ function CompanyDashboard() {
       </div>
 
       {/* Tabs */}
+
       <div style={styles.tabs}>
         {['overview', 'jobs', 'applications'].map(tab => (
           <button
@@ -210,7 +224,7 @@ function CompanyDashboard() {
                         style={styles.input}
                         placeholder="e.g. React Developer"
                         value={jobForm.title}
-                        onChange={e => setJobForm({...jobForm, title: e.target.value})}
+                        onChange={e => setJobForm({ ...jobForm, title: e.target.value })}
                         required
                       />
                     </div>
@@ -220,7 +234,7 @@ function CompanyDashboard() {
                         style={styles.input}
                         placeholder="e.g. Mumbai, Remote"
                         value={jobForm.location}
-                        onChange={e => setJobForm({...jobForm, location: e.target.value})}
+                        onChange={e => setJobForm({ ...jobForm, location: e.target.value })}
                         required
                       />
                     </div>
@@ -232,7 +246,7 @@ function CompanyDashboard() {
                       style={styles.textarea}
                       placeholder="Job description..."
                       value={jobForm.description}
-                      onChange={e => setJobForm({...jobForm, description: e.target.value})}
+                      onChange={e => setJobForm({ ...jobForm, description: e.target.value })}
                       rows={4}
                       required
                     />
@@ -244,7 +258,7 @@ function CompanyDashboard() {
                       <select
                         style={styles.input}
                         value={jobForm.jobType}
-                        onChange={e => setJobForm({...jobForm, jobType: e.target.value})}
+                        onChange={e => setJobForm({ ...jobForm, jobType: e.target.value })}
                       >
                         <option value="full-time">Full Time</option>
                         <option value="part-time">Part Time</option>
@@ -257,7 +271,7 @@ function CompanyDashboard() {
                       <select
                         style={styles.input}
                         value={jobForm.experience}
-                        onChange={e => setJobForm({...jobForm, experience: e.target.value})}
+                        onChange={e => setJobForm({ ...jobForm, experience: e.target.value })}
                       >
                         <option value="fresher">Fresher</option>
                         <option value="1-2 years">1-2 Years</option>
@@ -273,7 +287,7 @@ function CompanyDashboard() {
                       style={styles.input}
                       placeholder="e.g. React, Node.js, MongoDB"
                       value={jobForm.skills}
-                      onChange={e => setJobForm({...jobForm, skills: e.target.value})}
+                      onChange={e => setJobForm({ ...jobForm, skills: e.target.value })}
                       required
                     />
                   </div>
@@ -286,7 +300,7 @@ function CompanyDashboard() {
                         type="number"
                         placeholder="e.g. 300000"
                         value={jobForm.salary.min}
-                        onChange={e => setJobForm({...jobForm, salary: {...jobForm.salary, min: e.target.value}})}
+                        onChange={e => setJobForm({ ...jobForm, salary: { ...jobForm.salary, min: e.target.value } })}
                       />
                     </div>
                     <div style={styles.formGroup}>
@@ -296,7 +310,7 @@ function CompanyDashboard() {
                         type="number"
                         placeholder="e.g. 600000"
                         value={jobForm.salary.max}
-                        onChange={e => setJobForm({...jobForm, salary: {...jobForm.salary, max: e.target.value}})}
+                        onChange={e => setJobForm({ ...jobForm, salary: { ...jobForm.salary, max: e.target.value } })}
                       />
                     </div>
                   </div>

@@ -32,9 +32,23 @@ const userSchema = new mongoose.Schema({
     profilePicture: String
   },
   resume: {
-  type: String,
-  default: "",
-},
+    type: String,
+    default: "",
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
+  companyDocuments: {
+    gst: String,
+    registration: String,
+    description: String
+  },
   company: {
     companyName: String,
     website: String,
