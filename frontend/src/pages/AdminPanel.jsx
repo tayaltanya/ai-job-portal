@@ -14,6 +14,7 @@ function AdminPanel() {
   })
   const [users, setUsers] = useState([])
   const [jobs, setJobs] = useState([])
+  const [pendingCompanies, setPendingCompanies] = useState([])
   const [activeTab, setActiveTab] = useState('overview')
   const [loading, setLoading] = useState(true)
 
@@ -23,6 +24,7 @@ function AdminPanel() {
       return
     }
     fetchData()
+    fetchPendingCompanies()
   }, [])
 
   const fetchData = async () => {
@@ -48,6 +50,35 @@ function AdminPanel() {
       console.error(err)
     }
     setLoading(false)
+  }
+
+  const fetchPendingCompanies = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('user'))?.token
+      const res = await axios.get(
+        'http://localhost:5000/api/auth/pending-companies',
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      setPendingCompanies(res.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleVerify = async (companyId, status) => {
+    try {
+      const token = JSON.parse(localStorage.getItem('user'))?.token
+      await axios.put(
+        `http://localhost:5000/api/auth/verify-company/${companyId}`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      // Refresh both lists so UI stays in sync
+      fetchPendingCompanies()
+      fetchData()
+    } catch (err) {
+      alert('Failed to update company status!')
+    }
   }
 
   const handleDeleteUser = async (userId) => {
@@ -96,7 +127,7 @@ function AdminPanel() {
 
       {/* Tabs */}
       <div style={styles.tabs}>
-        {['overview', 'users', 'jobs'].map(tab => (
+        {['overview', 'users', 'jobs', 'companies'].map(tab => (
           <button
             key={tab}
             style={activeTab === tab ? styles.tabActive : styles.tab}
@@ -105,6 +136,7 @@ function AdminPanel() {
             {tab === 'overview' && '📊 Overview'}
             {tab === 'users' && '👥 Users'}
             {tab === 'jobs' && '💼 Jobs'}
+            {tab === 'companies' && `⏳ Pending Companies (${pendingCompanies.length})`}
           </button>
         ))}
       </div>
@@ -205,7 +237,8 @@ function AdminPanel() {
             </div>
           </div>
         )}
-        // Add new tab
+
+        {/* Pending Companies Tab */}
         {activeTab === 'companies' && (
           <div>
             <h2 style={styles.sectionTitle}>
@@ -217,9 +250,9 @@ function AdminPanel() {
               pendingCompanies.map(company => (
                 <div key={company._id} style={styles.companyCard}>
                   <div>
-                    <h3>{company.name}</h3>
-                    <p>{company.email}</p>
-                    <p>{company.company?.companyName}</p>
+                    <h3 style={styles.listName}>{company.name}</h3>
+                    <p style={styles.listEmail}>{company.email}</p>
+                    <p style={styles.listEmail}>{company.company?.companyName}</p>
                   </div>
                   <div style={styles.actionBtns}>
                     <button
@@ -367,6 +400,22 @@ const styles = {
     background: '#ff4757', color: 'white', border: 'none',
     padding: '6px 12px', borderRadius: '6px',
     cursor: 'pointer', fontSize: '12px', fontWeight: '600'
+  },
+  companyCard: {
+    background: 'white', borderRadius: '16px', padding: '20px 24px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.06)', marginBottom: '16px',
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+  },
+  actionBtns: { display: 'flex', gap: '10px', flexShrink: 0 },
+  approveBtn: {
+    background: '#2ecc71', color: 'white', border: 'none',
+    padding: '10px 18px', borderRadius: '8px',
+    cursor: 'pointer', fontSize: '13px', fontWeight: '600'
+  },
+  rejectBtn: {
+    background: '#e74c3c', color: 'white', border: 'none',
+    padding: '10px 18px', borderRadius: '8px',
+    cursor: 'pointer', fontSize: '13px', fontWeight: '600'
   }
 }
 
