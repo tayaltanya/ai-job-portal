@@ -25,7 +25,7 @@ router.post('/', protect, companyOnly, async (req, res) => {
       })
     }
 
-    const job = await Job.create({
+    const newjob = await Job.create({
       ...req.body,
       company: req.user._id
     });
